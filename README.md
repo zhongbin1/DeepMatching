@@ -65,7 +65,7 @@ $\text{sim}=u^TMv$
 
 - 架构：
 
-![mv-lstm](https://github.com/zhongbin1/DeepMatching/tree/master/graphs)
+![mv-lstm](https://github.com/zhongbin1/DeepMatching/tree/master/graphs/mv-lstm.png)
 
 - 训练方式：**pairwise**，考虑三元组$(S_X,S_Y^+,S^{-\\}_{Y})$，定义损失函数为hinge loss
   $$
