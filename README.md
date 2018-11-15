@@ -1,30 +1,4 @@
-1、DSSM : Learning deep structured semantic models for web search using clickthrough data, PS Huang et al.
-
-2、ARC：Convolutional Neural Network Architectures for Matching Natural Language Sentences, B Hu et al.
-
-3、MV-LSTM : A Deep Architecture for Semantic Matching with Multiple Positional Sentence Representations, S Wan et al
-
-4、MatchPyramid：Text Matching as Image Recognition, L pang et al.
-
-5、BiMPM：Bilateral Multi-Perspective Matching for Natural Language Sentences, Z Wang et al.
-
-6、DIIN：Natural Language Infefence Over Interaction space, Y Gong et al.
-
-7、DRCN：Semantic Sentence Matching with Densely-connected Recurrent and Co-attentive Information, S Kim et al.
-
-| Models       | NDCG@3 | NDCG@5 | MAP    |
-| ------------ | ------ | ------ | ------ |
-| DSSM         | 0.5439 | 0.6134 | 0.5647 |
-| CDSSM        | 0.5489 | 0.6084 | 0.5593 |
-| ARC-I        | 0.5680 | 0.6317 | 0.5870 |
-| ARC-II       | 0.5647 | 0.6176 | 0.5845 |
-| MV-LSTM      | 0.5818 | 0.6452 | 0.5988 |
-| DRMM         | 0.6107 | 0.6621 | 0.6195 |
-| K-NRM        | 0.6268 | 0.6693 | 0.6256 |
-| aNMM         | 0.6160 | 0.6696 | 0.6297 |
-| DUET         | 0.6065 | 0.6722 | 0.6301 |
-| MatchPyramid | 0.6317 | 0.6913 | 0.6434 |
-| DRMM_TKS     | 0.6458 | 0.6956 | 0.6586 |
+This repo is a collection for some classic deep neural networks models in text matching , e.g. DSSM、L2R、MV-LSTM、MatchPyramid...
 
 ### 2018-11-07 DSSM
 
@@ -73,6 +47,7 @@ $\text{sim}=u^TMv$
   $$
 
 
+
 - 几点思考：
 
   - MV-LSTM本质上还是**Representation-Based**的相似度匹配计算方式，但采用双向LSTM的网络结构充分考虑了文本的上下文信息。
@@ -80,3 +55,17 @@ $\text{sim}=u^TMv$
   - 是否可以把listwise转化为pairwise的训练形式，通过多组pair体现出其排序的高低关系？效果如何？ 
 
 **初入文本匹配的坑，总体上来看本文思路描述的较为清晰，值得学习。**
+
+1、DSSM : Learning deep structured semantic models for web search using clickthrough data, PS Huang et al.
+
+2、ARC：Convolutional Neural Network Architectures for Matching Natural Language Sentences, B Hu et al.
+
+3、MV-LSTM : A Deep Architecture for Semantic Matching with Multiple Positional Sentence Representations, S Wan et al
+
+4、MatchPyramid：Text Matching as Image Recognition, L pang et al.
+
+5、BiMPM：Bilateral Multi-Perspective Matching for Natural Language Sentences, Z Wang et al.
+
+6、DIIN：Natural Language Infefence Over Interaction space, Y Gong et al.
+
+7、DRCN：Semantic Sentence Matching with Densely-connected Recurrent and Co-attentive Information, S Kim et al.
