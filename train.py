@@ -9,16 +9,17 @@ import tensorflow as tf
 from collections import Counter
 from models.L2R import L2R
 from models.MVLSTM import MVLSTM
+from models.MatchPyramid import MatchPyramid
 
 
 # Model Hyperparameters
-tf.flags.DEFINE_integer("embedding_dim", 64, "Dimensionality of character embedding (default: 64)")
+tf.flags.DEFINE_integer("embedding_dim", 50, "Dimensionality of character embedding (default: 64)")
 tf.flags.DEFINE_string("filter_sizes", "2,3", "Comma-separated filter sizes (default: '2,3')")
 tf.flags.DEFINE_integer("num_filters", 64, "Number of filters per filter size (default: 64)")
-tf.flags.DEFINE_integer("num_hidden", 100, "Number of hidden layer units (default: 100)")
-tf.flags.DEFINE_integer("num_k", 10, "Number of k (default: 5)")
+tf.flags.DEFINE_integer("num_hidden", 50, "Number of hidden layer units (default: 100)")
+tf.flags.DEFINE_integer("num_k", 4, "Number of k (default: 5)")
 
-tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (default: 0.5)")
+tf.flags.DEFINE_float("dropout_keep_prob", 0.3, "Dropout keep probability (default: 0.5)")
 tf.flags.DEFINE_float("l2_reg_lambda", 0.0, "L2 regularizaion lambda (default: 0.0)")
 # Data Parameter
 tf.flags.DEFINE_integer("max_len_left", 10, "max document length of left input")
@@ -28,7 +29,7 @@ tf.flags.DEFINE_integer("most_words", 300000, "Most number of words in vocab (de
 tf.flags.DEFINE_integer("seed", 123, "Random seed (default: 123)")
 tf.flags.DEFINE_string("train_dir", "./", "Training dir root")
 tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
-tf.flags.DEFINE_integer("num_epochs", 50, "Number of training epochs (default: 200)")
+tf.flags.DEFINE_integer("num_epochs", 20, "Number of training epochs (default: 200)")
 tf.flags.DEFINE_float("eval_split", 0.1, "Use how much data for evaluating (default: 0.1)")
 tf.flags.DEFINE_integer("evaluate_every", 100, "Evaluate model on dev set after this many steps (default: 100)")
 tf.flags.DEFINE_integer("checkpoint_every", 100, "Save model after this many steps (default: 100)")
@@ -101,24 +102,34 @@ def main():
         log_device_placement=FLAGS.log_device_placement)
         sess = tf.Session(config=session_conf)
         with sess.as_default():
-            model = L2R(
+            # model = L2R(
+            #     max_len_left=FLAGS.max_len_left,
+            #     max_len_right=FLAGS.max_len_right,
+            #     vocab_size=len(vocab),
+            #     embedding_size=FLAGS.embedding_dim,
+            #     filter_sizes=list(map(int, FLAGS.filter_sizes.split(","))),
+            #     num_filters=FLAGS.num_filters,
+            #     num_hidden=FLAGS.num_hidden,
+            #     l2_reg_lambda=FLAGS.l2_reg_lambda)
+
+            # model = MVLSTM(
+            #     max_len_left=FLAGS.max_len_left,
+            #     max_len_right=FLAGS.max_len_right,
+            #     vocab_size=len(vocab),
+            #     embedding_size=FLAGS.embedding_dim,
+            #     num_k=FLAGS.num_k,
+            #     num_hidden=FLAGS.num_hidden,
+            #     l2_reg_lambda=FLAGS.l2_reg_lambda)
+
+            model = MatchPyramid(
                 max_len_left=FLAGS.max_len_left,
                 max_len_right=FLAGS.max_len_right,
                 vocab_size=len(vocab),
                 embedding_size=FLAGS.embedding_dim,
-                filter_sizes=list(map(int, FLAGS.filter_sizes.split(","))),
+                filter_size=3,
                 num_filters=FLAGS.num_filters,
                 num_hidden=FLAGS.num_hidden,
                 l2_reg_lambda=FLAGS.l2_reg_lambda)
-
-            #model = MVLSTM(
-                # max_len_left=FLAGS.max_len_left,
-                # max_len_right=FLAGS.max_len_right,
-                # vocab_size=len(vocab),
-                # embedding_size=FLAGS.embedding_dim,
-                # num_k=FLAGS.num_k,
-                # num_hidden=FLAGS.num_hidden,
-                # l2_reg_lambda=FLAGS.l2_reg_lambda)
 
 
             # Define Training procedure
@@ -131,7 +142,7 @@ def main():
             sess.run(tf.global_variables_initializer())
 
             # Write the computation graph
-            writer = tf.summary.FileWriter('../logs/', sess.graph)
+            writer = tf.summary.FileWriter('./logs/', sess.graph)
 
             # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
             timestamp = str(int(time.time()))
