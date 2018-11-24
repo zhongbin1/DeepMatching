@@ -10,6 +10,7 @@ from collections import Counter
 from models.L2R import L2R
 from models.MVLSTM import MVLSTM
 from models.MatchPyramid import MatchPyramid
+from models.Self_Attention import Self_Attention
 
 
 # Model Hyperparameters
@@ -121,15 +122,27 @@ def main():
             #     num_hidden=FLAGS.num_hidden,
             #     l2_reg_lambda=FLAGS.l2_reg_lambda)
 
-            model = MatchPyramid(
+            # model = MatchPyramid(
+            #     max_len_left=FLAGS.max_len_left,
+            #     max_len_right=FLAGS.max_len_right,
+            #     vocab_size=len(vocab),
+            #     embedding_size=FLAGS.embedding_dim,
+            #     filter_size=3,
+            #     num_filters=FLAGS.num_filters,
+            #     num_hidden=FLAGS.num_hidden,
+            #     l2_reg_lambda=FLAGS.l2_reg_lambda)
+
+
+            model = Self_Attention(
                 max_len_left=FLAGS.max_len_left,
                 max_len_right=FLAGS.max_len_right,
                 vocab_size=len(vocab),
                 embedding_size=FLAGS.embedding_dim,
-                filter_size=3,
-                num_filters=FLAGS.num_filters,
-                num_hidden=FLAGS.num_hidden,
-                l2_reg_lambda=FLAGS.l2_reg_lambda)
+                num_hidden=300,
+                num_da = 350,
+                num_r = 10,
+                num_mlp_hidden = 128,
+                l2_reg_lambda=1.0)
 
 
             # Define Training procedure
@@ -183,17 +196,6 @@ def main():
                 if step % 10 == 0:
                     print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
 
-            # def dev_step(x_left_batch_dev, x_right_batch_dev, y_batch_dev):
-            #     feed_dict = {
-            #     cnn.input_left: x_left_batch_dev,
-            #     cnn.input_right: x_right_batch_dev,
-            #     cnn.input_y: y_batch_dev,
-            #     cnn.dropout_keep_prob: 1.0
-            #     }
-            #     step, loss, accuracy, sims, pres = sess.run(
-            #             [global_step, cnn.loss, cnn.accuracy, cnn.sims, cnn.scores],
-            #             feed_dict)
-            #     return loss,accuracy
 
             def dev_whole(x_left_dev, x_right_dev, y_dev):
                 feed_dict = {
