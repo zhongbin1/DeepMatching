@@ -1,6 +1,6 @@
 # DeepMatching
 
-This repo is a collection for some classic deep neural networks models in text matching , e.g. DSSM、L2R、MV-LSTM、MatchPyramid、Self-Attention...
+This repo is a collection for some classic deep neural networks models in text matching , e.g. DSSM、L2R、MV-LSTM、MatchPyramid、Self-Attention、DSA...
 
 ## Requirements
 
@@ -17,3 +17,4 @@ This repo is a collection for some classic deep neural networks models in text m
 6. BiMPM: Bilateral Multi-Perspective Matching for Natural Language Sentences, Z Wang et al.
 7. DIIN: Natural Language Infefence Over Interaction space, Y Gong et al.
 8. DRCN: Semantic Sentence Matching with Densely-connected Recurrent and Co-attentive Information, S Kim et al.
+9. DSA: Dynamic Self-Attention: Computing Attention over Words Dynamically for Sentence Embedding
