@@ -122,6 +122,9 @@ class DSA(object):
                     if r == num_iter-1:
                         Z_left.append(tf.reshape(z_left, shape=[-1, d_o]))
                         Z_right.append(tf.reshape(z_right, shape=[-1, d_o]))
+                        # for visualize
+                        att_left = tf.identity(a_left, name='attention_left')
+                        att_right = tf.identity(a_right, name='attention_right')
                 W_j.append(W)
 
 
