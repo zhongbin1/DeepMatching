@@ -112,12 +112,10 @@ class DSA(object):
                     a_left = get_masked_weights(q_left, self.length_left, max_len_left)
                     s_left = tf.matmul(a_left, X_hat_left)  # [batch_size, 1, d_o]
                     z_left = tf.nn.tanh(s_left)
-                    q_left = q_left + tf.expand_dims(tf.reduce_sum(tf.multiply(X_hat_left, z_left), axis=-1), 1)
 
                     a_right = get_masked_weights(q_right, self.length_right, max_len_right)
                     s_right = tf.matmul(a_right, X_hat_right)  # [batch_size, 1, d_o]
                     z_right = tf.nn.tanh(s_right)
-                    q_right = q_right + tf.expand_dims(tf.reduce_sum(tf.multiply(X_hat_right, z_right), axis=-1), 1)
 
                     if r == num_iter-1:
                         Z_left.append(tf.reshape(z_left, shape=[-1, d_o]))
@@ -125,6 +123,15 @@ class DSA(object):
                         # for visualize
                         att_left = tf.identity(a_left, name='attention_left')
                         att_right = tf.identity(a_right, name='attention_right')
+
+                    X_left_temp = X_hat_left / tf.sqrt(tf.reduce_sum(tf.square(X_hat_left), axis=-1, keepdims=True))
+                    z_left_temp = z_left / tf.sqrt(tf.reduce_sum(tf.square(z_left), axis=-1, keepdims=True))
+                    X_right_temp = X_hat_right / tf.sqrt(tf.reduce_sum(tf.square(X_hat_right), axis=-1, keepdims=True))
+                    z_right_temp = z_right / tf.sqrt(tf.reduce_sum(tf.square(z_right), axis=-1, keepdims=True))
+
+                    q_left = q_left + tf.matmul(z_left_temp, tf.transpose(X_left_temp, [0, 2, 1]))
+                    q_right = q_right + tf.matmul(z_right_temp, tf.transpose(X_right_temp, [0, 2, 1]))
+
                 W_j.append(W)
 
 
@@ -132,7 +139,7 @@ class DSA(object):
             self.penalty = 0.0
             for i in range(num_attentions):
                 for j in range(i+1, num_attentions):
-                    self.penalty += tf.nn.relu(1 - tf.square(tf.norm(W_j[i]-W_j[j], ord='fro', axis=[0,1])))
+                    self.penalty += tf.nn.relu(1 - tf.square(tf.norm(W_j[i]-W_j[j], ord='fro', axis=[0, 1])))
 
 
         with tf.name_scope('mlp_layer'):
@@ -172,3 +179,22 @@ class DSA(object):
         x_sign = tf.sign(tf.abs(x))
         length = tf.reduce_sum(x_sign, axis=1)
         return tf.cast(length, tf.int32)
+
+if __name__ == '__main__':
+    a = tf.get_variable('a', shape=[2, 3, 4], dtype=tf.float32, initializer=tf.truncated_normal_initializer())
+    b = tf.get_variable('b', shape=[2, 1, 4], dtype=tf.float32, initializer=tf.truncated_normal_initializer())
+
+    a = a/tf.sqrt(tf.reduce_sum(tf.square(a), axis=-1, keepdims=True))
+    b = b/tf.sqrt(tf.reduce_sum(tf.square(b), axis=-1, keepdims=True))
+
+    c = tf.matmul(b, tf.transpose(a, [0, 2, 1]))
+    d = tf.expand_dims(tf.reduce_sum(tf.multiply(a, b), axis=-1), 1)
+
+    e = tf.constant([1, 1, 2**0.5], dtype=tf.float32)
+    f = e/tf.sqrt(tf.reduce_sum(tf.square(e), axis=-1, keepdims=True))
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        c_, d_, f_ = sess.run([c, d, f])
+        print(c_)
+        print(d_)
+        print(f_)
