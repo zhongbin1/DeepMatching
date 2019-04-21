@@ -1,6 +1,6 @@
 # DeepMatching
 
-This repo is a collection for some classic deep neural networks models in text matching , e.g. DSSM、L2R、MV-LSTM、MatchPyramid、Self-Attention、DSA...
+This repo is a collection for some classic deep neural network models in text matching , e.g. DSSM、L2R、MV-LSTM、MatchPyramid、Self-Attention、DSA...
 
 ## Requirements
 
